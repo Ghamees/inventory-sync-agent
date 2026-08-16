@@ -41,12 +41,16 @@ def main():
             print(f"  {warehouse_name}: {quantity}")
 
         conflict_id = create_conflict_id(conflict)
-
-        if has_been_handled(conflict_id):
-            print("\nAlready handled. No duplicate action taken.\n")
-            continue
-
         decision = decide_action(conflict)
+
+        # Non-mutating actions such as manual-review alerts and recount
+        # requests should only be created once for the same unchanged conflict.
+        if (
+            decision["action"] in {"manual_review", "trigger_recount"}
+            and has_been_handled(conflict_id)
+            ):
+            print("\nAlready handled. No duplicate alert or recount created.\n")
+            continue
 
         print("\nDecision:")
         print(f"  Action: {decision['action']}")

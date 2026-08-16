@@ -22,8 +22,16 @@ def execute_action(decision: dict) -> list[dict]:
     elif decision["action"] == "trigger_recount":
         results.append(
             {
-                "warehouse": decision["target_warehouses"],
+                "warehouses": decision["target_warehouses"],
                 "result": "Recount requested",
+            }
+        )
+
+    elif decision["action"] == "manual_review":
+        results.append(
+            {
+                "warehouses": decision["target_warehouses"],
+                "result": "Manual review required",
             }
         )
 

@@ -11,7 +11,6 @@ class StockUpdate(BaseModel):
 inventory = {
     "SKU-100": 18,
     "SKU-200": 8,
-    "SKU-300": 20,
 }
 
 

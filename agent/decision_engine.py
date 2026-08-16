@@ -3,6 +3,16 @@ from collections import Counter
 
 def decide_action(conflict: dict) -> dict:
     sku = conflict["sku"]
+
+    if conflict["type"] == "missing_sku":
+        return {
+            "sku": sku,
+            "action": "manual_review",
+            "target_quantity": None,
+            "target_warehouses": conflict["missing_warehouses"],
+            "reason": "SKU is missing from one or more warehouse systems",
+        }
+
     warehouse_quantities = conflict["warehouse_quantities"]
 
     quantities = list(warehouse_quantities.values())
@@ -10,7 +20,6 @@ def decide_action(conflict: dict) -> dict:
 
     most_common_quantity, frequency = counts.most_common(1)[0]
 
-    # If at least two warehouses agree, treat that as the consensus.
     if frequency >= 2:
         outliers = [
             warehouse_name
@@ -26,7 +35,6 @@ def decide_action(conflict: dict) -> dict:
             "reason": "Majority warehouse consensus",
         }
 
-    # No majority means the conflict is ambiguous.
     return {
         "sku": sku,
         "action": "trigger_recount",
